@@ -1,2 +1,2 @@
 # bliss
-A Bliss web server
+A Bliss web application

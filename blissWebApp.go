@@ -1,11 +1,13 @@
-//webServer.go, A Sample Web Server
+//blissWebApp.go, A Sample Web Application
 
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"io/ioutil"
-	"log"
+	//"log"
+	"os/exec"
 	"net/http"
 	"regexp"
 )
@@ -15,13 +17,35 @@ type Page struct {
 	Body  []byte
 }
 
+const (
+	cstStrApp = "BlissWebApp"
+	cstStrVer = "v1.0.0"
+	cstStrUTC = "Build LIHUI 2021-02-01 22:20:09.1919361 +0000 UTC"
+	cstIPPort = "8081"
+)
 
-func main() {
+func webServerRoutine() {
+	http.HandleFunc("/", webHandler)
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
+	http.ListenAndServe(":" + cstIPPort, nil)
+}
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+func webHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "%s %s\n", cstStrApp, cstStrVer)
+	fmt.Fprintf(w, "Port: %s\n", cstIPPort)
+	fmt.Fprintf(w, "%s\n", cstStrUTC)
+}
+
+func startBrower() {
+	cmd := exec.Command("explorer", "http://127.0.0.1:" + cstIPPort)
+	cmd.Run()
+}
+
+func main() {
+	go startBrower()
+	webServerRoutine()
 }
 
 func (p *Page) save() error {
