@@ -1,5 +1,5 @@
 SET CGO_ENABLED=0
-SET GOOS=linux
 SET GOARCH=amd64
-go build webServer.go
+SET GOOS=linux
+go build blissWebApp.go
 pause
