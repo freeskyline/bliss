@@ -19,9 +19,50 @@ type page struct {
 const (
 	cstStrApp = "BlissWebApp"
 	cstStrVer = "v1.0.0"
-	cstStrUTC = "Build LIHUI 2021-02-01 22:20:09.1919361 +0000 UTC"
 	cstIPPort = "8081"
+	cstStrUTC = "Build LIHUI 2021-02-01 22:20:09.1919361 +0000 UTC"
 )
+
+type stMainPage struct {
+	App string
+	Ver string
+	Prt string
+	UTC string
+	Dir string
+}
+
+var (
+	mainPage stMainPage
+)
+
+var tmplMainPage = template.Must(template.New("tmplMainPage").Parse(`
+<h1>{{.App}} </h1>
+<body>
+<p>Version: {{.Ver}}</p>
+<p>Port No: {{.Prt}}</p>
+<p>{{.UTC}}</p>
+<p>Path: {{.Dir}}</p>
+<table>
+<tr style='text-align: left'>
+<th>No.</th>
+<th>Item</th>
+<th>Description</th>
+</tr>
+<tr>
+<th>1</th>
+<th>Modbus</th>
+<th>Modbus Test Tool</th>
+</tr>
+</table>
+<body>
+`))
+
+func init() {
+	mainPage.App = cstStrApp
+	mainPage.Ver = cstStrVer
+	mainPage.UTC = cstStrUTC
+	mainPage.Prt = cstIPPort
+}
 
 func webServerRoutine() {
 	http.HandleFunc("/", webHandler)
@@ -32,9 +73,8 @@ func webServerRoutine() {
 }
 
 func printAppInfo(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "%s %s Port: %s\n", cstStrApp, cstStrVer, cstIPPort)
-	fmt.Fprintf(w, "%s\n\n", cstStrUTC)
-	fmt.Fprintf(w, "%s\n", r.URL.Path)
+	mainPage.Dir = fmt.Sprintf("%s", r.URL.Path)
+	tmplMainPage.Execute(w, mainPage)
 }
 
 func webHandler(w http.ResponseWriter, r *http.Request) {
