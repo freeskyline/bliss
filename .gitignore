@@ -1,2 +1,4 @@
 # Generated executable files
 *.exe
+*.o
+*.a

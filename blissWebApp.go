@@ -6,9 +6,12 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"kgen"
 	"net/http"
 	"os/exec"
 	"regexp"
+	"strings"
+	"time"
 )
 
 type page struct {
@@ -69,6 +72,7 @@ func webServerRoutine() {
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
+	http.HandleFunc("/passwd/", kgenHandler)
 	http.ListenAndServe(":"+cstIPPort, nil)
 }
 
@@ -79,6 +83,16 @@ func printAppInfo(w http.ResponseWriter, r *http.Request) {
 
 func webHandler(w http.ResponseWriter, r *http.Request) {
 	printAppInfo(w, r)
+}
+
+func kgenHandler(w http.ResponseWriter, r *http.Request) {
+	id := strings.SplitN(r.URL.Path,"/",3)[2]
+
+	tim := time.Now()
+	ver := kgen.GetVerTag()
+	pwd := kgen.CalcPasswd(id, tim)
+	mainPage.Dir = fmt.Sprintf("%s/%s/%s", ver, id, pwd)
+	tmplMainPage.Execute(w, mainPage)
 }
 
 func startBrower() {
