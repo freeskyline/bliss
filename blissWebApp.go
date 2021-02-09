@@ -41,20 +41,75 @@ var (
 var tmplMainPage = template.Must(template.New("tmplMainPage").Parse(`
 <h1>{{.App}} </h1>
 <body>
-<p>Version: {{.Ver}}</p>
-<p>Port No: {{.Prt}}</p>
-<p>{{.UTC}}</p>
-<p>Path: {{.Dir}}</p>
 <table>
 <tr style='text-align: left'>
-<th>No.</th>
+<th>Path: {{.Dir}}</th>
+</tr>
+<tr style='text-align: left'>
+<th>Version: {{.Ver}}</th>
+</tr>
+<tr style='text-align: left'>
+<th>Port No: {{.Prt}}</th>
+</tr>
+<tr style='text-align: left'>
+<th>{{.UTC}}</th>
+</tr>
+<tr>
+<th></th>
+</tr>
+</table>
+
+<table>
+<tr style='text-align: left'>
+<th>#</th>
+<th>Wiki</th>
+<th>Description</th>
+</tr>
+<tr style='text-align: left'>
+<th>1</th>
+<th><a href="/view">view</a></th>
+<th>View page</th>
+</tr>
+<tr style='text-align: left'>
+<th>2</th>
+<th><a href="/edit">edit</a></th>
+<th>Edit page</th>
+</tr>
+<tr style='text-align: left'>
+<th>3</th>
+<th><a href="/save">save</a></th>
+<th>Save page</th>
+</tr>
+<tr style='text-align: left'>
+<th>4</th>
+<th><a href="/passwd">pass</a></th>
+<th>Pass page</th>
+</tr>
+</tr>
+<tr>
+<th></th>
+</tr>
+</table>
+<table>
+<tr style='text-align: left'>
+<th>#</th>
 <th>Item</th>
 <th>Description</th>
 </tr>
-<tr>
+<tr style='text-align: left'>
 <th>1</th>
-<th>Modbus</th>
-<th>Modbus Test Tool</th>
+<th><a href="/snmp">snmp</a></th>
+<th>SNMP Tool</th>
+</tr>
+<tr style='text-align: left'>
+<th>2</th>
+<th><a href="/radius">radius</a></th>
+<th>RADIUS Tool</th>
+</tr>
+<tr style='text-align: left'>
+<th>3</th>
+<th><a href="/modbus">modbus</a></th>
+<th>Modbus Tool</th>
 </tr>
 </table>
 <body>
@@ -86,7 +141,7 @@ func webHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func kgenHandler(w http.ResponseWriter, r *http.Request) {
-	id := strings.SplitN(r.URL.Path,"/",3)[2]
+	id := strings.SplitN(r.URL.Path, "/", 3)[2]
 
 	tim := time.Now()
 	ver := kgen.GetVerTag()
